@@ -1,0 +1,561 @@
+
+*,html,body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+body{
+  overflow: hidden;
+}
+
+.parallax{
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+    height: 100vh;
+    width: 100%;
+}
+/* ==== */
+/* atas */
+/* ==== */
+.atas {
+  background-image: url('./assets/image/bgatas.png');
+  z-index:0 ;
+  display: flex;
+  justify-content: center;
+  
+}
+
+.judul{
+  font-family: "Bungee Spice", sans-serif;
+  margin-top: 7rem;
+  font-size: 70px;
+  position: absolute;
+  margin-left: 26%;
+  z-index: 4;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+.container, .video-controls, .video-timer, .options{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.container.show-controls{
+  margin-top: 180px;
+  width: 80%;
+  height: fit-content;
+  user-select: none;
+  overflow: hidden;
+  max-width: 1000px;
+  border-radius: 5px;
+  background: #000;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border: 31px ridge #ff6550;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.container.show-controls video {
+  width: 100%; /* Gunakan lebar video sejajar dengan container */
+  height: auto; /* Biarkan ketinggian video disesuaikan dengan aspek rasio */
+  display: block; /* Pastikan video ditampilkan sebagai blok */
+  max-width: 100%; /* Pastikan video tidak melebihi lebar container */
+  outline: none; 
+}
+.container.fullscreen{
+  max-width: 100%;
+  width: 100%;
+  height: 100vh;
+  border-radius: 0px;
+}
+.wrapper{
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  opacity: 0;
+  bottom: -15px;
+  transition: all 0.08s ease;
+}
+.container.show-controls .wrapper{
+  opacity: 1;
+  bottom: 0;
+  transition: all 0.13s ease;
+}
+.wrapper::before{
+  content: "";
+  bottom: 0;
+  width: 100%;
+  z-index: -1;
+  position: absolute;
+  height: calc(100% + 35px);
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+}
+.video-timeline{
+  height: 7px;
+  width: 100%;
+  cursor: pointer;
+}
+.video-timeline .progress-area{
+  height: 3px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.6);
+}
+.progress-area span{
+  position: absolute;
+  left: 50%;
+  top: -25px;
+  font-size: 13px;
+  color: #fff;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+.progress-area .progress-bar{
+  width: 0%;
+  height: 100%;
+  position: relative;
+  background: #2289ff;
+}
+.progress-bar::before{
+  content: "";
+  right: 0;
+  top: 50%;
+  height: 13px;
+  width: 13px;
+  position: absolute;
+  border-radius: 50%;
+  background: #2289ff;
+  transform: translateY(-50%);
+}
+.progress-bar::before, .progress-area span{
+  display: none;
+}
+.video-timeline:hover .progress-bar::before,
+.video-timeline:hover .progress-area span{
+  display: block;
+}
+.wrapper .video-controls{
+  padding: 5px 20px 10px;
+}
+.video-controls .options{
+  width: 100%;
+}
+.video-controls .options:first-child{
+  justify-content: flex-start;
+}
+.video-controls .options:last-child{
+  justify-content: flex-end;
+}
+.options button{
+  height: 40px;
+  width: 40px;
+  font-size: 19px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: #efefef;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+.options button :where(i, span) {
+  height: 100%;
+  width: 100%;
+  line-height: 40px;
+}
+.options button:hover :where(i, span){
+  color: #fff;
+}
+.options button:active :where(i, span){
+  transform: scale(0.9);
+}
+.options button span{
+  font-size: 23px;
+}
+.options input{
+  height: 4px;
+  margin-left: 3px;
+  max-width: 75px;
+  accent-color: #0078FF;
+}
+.options .video-timer{
+  color: #efefef;
+  margin-left: 15px;
+  font-size: 14px;
+}
+.video-timer .separator{
+  margin: 0 5px;
+  font-size: 16px;
+  font-family: "Open sans";
+}
+.playback-content{
+  display: flex;
+  position: relative;
+}
+.playback-content .speed-options{
+  position: absolute;
+  list-style: none;
+  left: -40px;
+  bottom: 40px;
+  width: 95px;
+  overflow: hidden;
+  opacity: 0;
+  border-radius: 4px;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.13s ease;
+}
+.playback-content .speed-options.show{
+  opacity: 1;
+  pointer-events: auto;
+}
+.speed-options li{
+  cursor: pointer;
+  color: #000;
+  font-size: 14px;
+  margin: 2px 0;
+  padding: 5px 0 5px 15px;
+  transition: all 0.1s ease;
+}
+.speed-options li:where(:first-child, :last-child){
+  margin: 0px;
+}
+.speed-options li:hover{
+  background: #dfdfdf;
+}
+.speed-options li.active{
+  color: #fff;
+  background: #3e97fd;
+}
+.container video{
+  width: 100%;
+}
+@media screen and (max-width: 540px) {
+  .wrapper .video-controls{
+    padding: 3px 10px 7px;
+  }
+  .options input, .progress-area span{
+    display: none!important;
+  }
+  .options button{
+    height: 30px;
+    width: 30px;
+    font-size: 17px;
+  }
+  .options .video-timer{
+    margin-left: 5px;
+  }
+  .video-timer .separator{
+    font-size: 14px;
+    margin: 0 2px;
+  }
+  .options button :where(i, span) {
+    line-height: 30px;
+  }
+  .options button span{
+    font-size: 21px;
+  }
+  .options .video-timer, .progress-area span, .speed-options li{
+    font-size: 12px;
+  }
+  .playback-content .speed-options{
+    width: 75px;
+    left: -30px;
+    bottom: 30px;
+  }
+  .speed-options li{
+    margin: 1px 0;
+    padding: 3px 0 3px 10px;
+  }
+  .right .pic-in-pic{
+    display: none;
+  }
+}
+
+
+/* ====== */
+/* tengah */
+/* ====== */
+
+.tengah{
+  background-image: url('./assets/image/bgtengah.jpg');
+}
+.scroll{
+  z-index: 1;
+  position: absolute;
+  margin-top: 20px;
+}
+.bawah{
+  background-image: url('./assets/image/bgbawah.gif');
+}
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  background-color: red; /* Background warna merah */
+  color: yellow; /* Warna tulisan kuning */
+  padding: 10px; /* Padding */
+}
+
+.marquee {
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+.marquee img {
+  height: 25px;
+}
+.vokalis{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 20px;
+  z-index: 0;
+}
+.headshot {
+	flex-shrink: 0;
+	margin: 20px;
+	height: calc(150px + 6vw);
+	width: calc(150px + 6vw);
+	border: calc(8px + 0.2vw) solid transparent;
+	background-origin: border-box;
+	background-clip: content-box, border-box;
+	background-size: cover;
+	box-sizing: border-box;
+	box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: row;
+}
+
+.headshot-1 {
+	border-radius: 30%;
+	background-image: url('./assets/image/once.jpg'), linear-gradient(#f9f047, #0fd850);
+}
+
+.headshot-2 {
+	border-radius: 50%;
+	background-image: url('./assets/image/arilasso.jpg'), linear-gradient(to bottom right, #ff3cac, #562b7c, #2b86c5);
+}
+
+.headshot-3 {
+	border-radius: 50% 10%;
+	background-image: url('./assets/image/ello.jpg'), linear-gradient(to bottom left, #f83600, #f9d423);
+}
+.headshot-4 {
+	border-radius: 50% 50% 70% 40%;
+	background-image: url('./assets/image/virzha.jpg'), linear-gradient(to bottom left, #f83600, #f9d423);
+}
+
+.card {
+  width: 190px;
+  height: 265px;
+  background: lightgrey;
+  position: relative;
+  transform: skewY(-10deg);
+  border: 5px solid #fa0202;
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+
+.card::before {
+  content: '';
+  width: 10px;
+  height: 254px;
+  background: #ff0000;
+  position: absolute;
+  top: -5px;
+  left: -14.7px;
+  transform-origin: right;
+  transform: skewY(45deg);
+  border: none;
+  transition: all 0.5s;
+}
+
+.card::after {
+  content: '';
+  height: 10px;
+  width: 190px;
+  background: #e36d6d;
+  position: absolute;
+  top: -14.7px;
+  left: -5px;
+  transform-origin: bottom;
+  transform: skewX(45deg);
+  border: none;
+  transition: all 0.5s;
+}
+
+.card:hover {
+  transform: skewY(0deg);
+}
+
+.card:hover::before {
+  width: 0px;
+  height: 249px;
+  left: 0;
+  top: 0.1px;
+}
+
+.card:hover::after {
+  width: 184px;
+  height: 0px;
+  left: 0.1px;
+  top: 0;
+}
+
+.card__content {
+  padding: 10px;
+  
+}
+.card__content img{
+  width: 160px;
+
+}
+
+
+/* bawah */
+.deskripsi h2{
+  position: absolute;
+  color: #f0f0f0;
+  z-index: 100;
+  display: flex;
+  margin-top: 50px;
+  left: 85vh;
+  text-align: center;
+}
+
+.container-hobby{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.music-player {
+  position: relative;
+  width: 400px;
+  padding: 25px 35px;
+  text-align: center;
+  border-radius: 20px;
+  overflow: hidden;
+  background:#fff;
+  animation: rotateBackground 20s linear infinite;
+  box-shadow: 0 0 20px red, 
+              0 0 20px yellow,
+              0 0 20px blue, 
+              0 0 20px green; 
+}
+
+@keyframes rotateBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+.circle a{
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  line-height: 0px;
+  font-size: 35px;
+  background: #fff;
+  color: #f53192;
+  box-shadow: 0 5px 10px rgba(255,26,26,0.22);
+}
+nav .circle{
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  background: #fff;
+  color: #f53192;
+  box-shadow: 0 5px 10px rgba(255,26,26,0.22);
+}
+.song-img{
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border:8px solid #fff;
+  box-shadow:0 10px 60px rgba(255,26,26,0.22);
+}
+.music-player h1{
+  font-size: 20px;
+  font-weight: 400px;
+  color: #333;
+  margin-top: 20px;
+}
+.music-player p{
+  font-size: 14px;
+  color: #333;
+}
+#progress{
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #f53192;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 40px 0;
+}
+#progress::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  background: #f53192;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 8px solid #fff;
+  box-shadow: 0 5px 5px rgba(255,26,26,0.22);
+}
+.controls{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.controls div{
+  width: 60px;
+  height: 60px;
+  margin: 20px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #f53192;
+  box-shadow: 0 10px 20px rgba(255,26,26,0.22);
+  cursor: pointer;
+}
+.controls div:nth-child(2){
+  transform: scale(1.5);
+  background: #f53192;
+  color: #fff;
+}
+@media (max-width: 468px) {
+  .music-player {
+    width: 90%; /* Atur ulang lebar sesuai kebutuhan */
+    max-width: none; /* Hapus batasan lebar maksimum */
+    margin-top: 10px; /* Atur margin atas agar terlihat lebih baik */
+  }
+}
